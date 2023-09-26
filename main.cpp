@@ -2,8 +2,8 @@
 #include "Stack.h"
 #include "Best_cat_welcome.h"
 #include "config.h"
-#include "StackStruct.h"
-#include "StackHidden.h"
+//#include "StackStruct.h"
+//#include "StackHidden.h"
 //Массив стэков
 //Внутренний заголовок маин не инключ спп инклюд            ++
 //Можно объявить разные сьркуьуры но одинакового размера    ++ 

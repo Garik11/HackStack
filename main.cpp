@@ -4,7 +4,7 @@
 #include "config.h"
 //#include "StackStruct.h"
 //#include "StackHidden.h"
-//Массив стэков
+//Массив стэков                                             ++
 //Внутренний заголовок маин не инключ спп инклюд            ++
 //Можно объявить разные сьркуьуры но одинакового размера    ++ 
 //Отделить hash                                             ++
@@ -27,7 +27,10 @@ int main(void){
     printf(MY_BEST_CAT);
     StackErrorsBitmask error = STACK_ALL_OK;
     Stack *stk = STACK_CTOR(&error);
-    StackPush(stk, 10, &error);  
-    StackPop(stk, &error);  
+    for(size_t i = 0; i < 10000; i++){
+        StackPush(stk, i*i, &error);  
+    }
+    for(size_t i = 0; i < 10000; i++)
+        printf("%d\n", StackPop(stk, &error));
     StackDtor(stk);
 }

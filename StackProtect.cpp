@@ -1,5 +1,5 @@
 #include "StackProtect.h"
-
+#ifdef DEBUG
 HASH StackGetStructHash(Stack *stk, uint64_t seed){
 
     HASH backup = stk->structhash;
@@ -42,3 +42,4 @@ bool StackCmpDataCalibri(Stack* stk){
            *((Calibri*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) == 
              (Calibri )(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri));
 }
+#endif

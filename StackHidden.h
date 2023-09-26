@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include "Stack.h"
 #include "StackStruct.h"
+#include "StackArray.h"
 #include "recalloc.h"
 #include "config.h"
 
@@ -15,8 +16,10 @@
 
 #define STACK_SET_ERROR(сondition, сondition_name) ((сondition) == 0) ? сondition_name : STACK_ALL_OK
 
-static Stack StacksArray[STACK_MAX_SIZE]    = {};
-static size_t StacksArrayPosition           = 0;
+enum StackStatus{
+    EMPTY,
+    FILLED
+};
 
 const size_t POISONED_NUM =     (size_t)-1 / 2;
 const size_t SIZE_T_OVERFLOW =  (size_t)-1;

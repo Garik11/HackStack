@@ -8,6 +8,8 @@
 #include "StackStruct.h"
 #include "config.h"
 
+#ifdef DEBUG
+
 HASH StackGetStructHash     (Stack *stk, uint64_t seed = 5461216);
 HASH StackGetDataHash       (Stack *stk, uint64_t seed = 5461216);
 bool StackCmpStructHash     (Stack *stk, uint64_t seed = 5461216);
@@ -15,5 +17,7 @@ bool StackCmpDataHash       (Stack *stk, uint64_t seed = 5461216);
 
 bool StackCmpStructCalibri  (Stack* stk);
 bool StackCmpDataCalibri    (Stack* stk);
+
+#endif // DEBUG
 
 #endif // !STACK_PROTECT

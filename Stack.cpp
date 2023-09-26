@@ -2,7 +2,7 @@
 
 #ifdef DEBUG
     #include "StackProtect.h"
-    #include "StackDescriptor.h"
+    //#include "StackDescriptor.h"
 #endif //DEBUG
 
 Stack* StackCtor(const char*    CREATION_FILE, 
@@ -13,9 +13,9 @@ Stack* StackCtor(const char*    CREATION_FILE,
 
     StackErrorsBitmask errors = STACK_ALL_OK;
 
-    Stack* stk = (Stack*)calloc(1, sizeof(Stack));
-
-    errors = STACK_SET_ERROR(stk != NULL, STACK_CTOR_CALLOC);
+    Stack* stk = NULL;
+    StackGetStack(&stk, &errors);
+    errors = STACK_SET_ERROR(stk != NULL, STACK_CTOR_GETSTACK);
     if(errors != STACK_ALL_OK){
         ON_DEBUG(
             BAD_STACK_DUMP(stk, errors);
@@ -36,28 +36,26 @@ Stack* StackCtor(const char*    CREATION_FILE,
     #else
         stk->data = (char*)calloc(sizeof(BYTE), DATA_STANDART_SIZE * sizeof(Elem_t));
     #endif
-
-    errors = STACK_SET_ERROR(stk->data != NULL, STACK_CTOR_CALLOC);
+    errors = STACK_SET_ERROR(stk->data != NULL, STACK_CTOR_DATA_CALLOC);
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
             BAD_STACK_DUMP(stk, errors);
         )
 
-        free(stk);
+        StackBackStack(stk, &errors);
 
         if(err_ret != NULL)
             *err_ret |= errors;
         return NULL;
     }
-
     stk->capacity   = STARTING_POSITION ;
     stk->size       = DATA_STANDART_SIZE;
 
     ON_DEBUG(
-        DESCRIPTORADD(stk, &errors);
-        if(errors != STACK_ALL_OK)
-            BAD_STACK_DUMP(stk, errors);
+        //DESCRIPTORADD(stk, &errors);
+        //if(errors != STACK_ALL_OK)
+         //   BAD_STACK_DUMP(stk, errors);
         stk->CREATION_FILE = CREATION_FILE;
         stk->CREATION_LINE = CREATION_LINE;
         stk->CREATION_FUNC = CREATION_FUNC;
@@ -71,6 +69,7 @@ Stack* StackCtor(const char*    CREATION_FILE,
         stk->datahash   = StackGetDataHash  (stk);
         stk->structhash = StackGetStructHash(stk);
     )
+    
     return stk;
 }
 
@@ -89,22 +88,10 @@ void StackDtor(Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
         return;
     }
 
-    free(stk->data);
-    stk->data       = NULL;
-    stk->capacity   = POISONED_NUM;
-    stk->size       = POISONED_NUM;
+    StackBackStack(stk, &errors);
 
-    ON_DEBUG(
-        DESCRIPTORDEC(stk, &errors);
-        if(errors != STACK_ALL_OK)
-            BAD_STACK_DUMP(stk, errors);
-        stk->calibri_left = 0;
-        stk->CREATION_FILE = NULL;
-        stk->CREATION_FILE = 0;
-        stk->CREATION_FUNC = NULL;
-        stk->calibri_right = 0;
-    )
-    free(stk);
+    if(err_ret != NULL)
+        *err_ret |= errors;
 }
 
 StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask basicerror){
@@ -112,7 +99,7 @@ StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask basicerror){
     StackErrorsBitmask errors = basicerror;
 
     #ifdef DEBUG
-        if(DESCRIPTORFIND(stk) == false)    return STACK_NOT_DEFINED | STACK_WRONG_DESCRIPTOR;
+        if(StackCheckExistence(stk) == false)    return STACK_NOT_DEFINED | STACK_WRONG_DESCRIPTOR;
     #else
         if(stk == NULL)                     return STACK_NOT_DEFINED;
     #endif
@@ -136,7 +123,7 @@ StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask basicerror){
 
 void StackCheckAllErrors(StackErrorsBitmask errors){
     if(errors & STACK_NOT_DEFINED           ) print_error(STACK_NOT_DEFINED          );
-    if(errors & STACK_CTOR_CALLOC           ) print_error(STACK_CTOR_CALLOC          );
+    if(errors & STACK_CTOR_GETSTACK         ) print_error(STACK_CTOR_GETSTACK          );
     if(errors & STACK_DATA_NOT_DEFINED      ) print_error(STACK_DATA_NOT_DEFINED     );
     if(errors & STACK_SIZE_MISMATCH         ) print_error(STACK_SIZE_MISMATCH        );
     if(errors & STACK_MULTIPLY_CALLOC       ) print_error(STACK_MULTIPLY_CALLOC      );
@@ -150,6 +137,7 @@ void StackCheckAllErrors(StackErrorsBitmask errors){
     if(errors & STACK_BAD_DATA_CALIBRI      ) print_error(STACK_BAD_DATA_CALIBRI     );
     if(errors & STACK_WRONG_DESCRIPTOR      ) print_error(STACK_WRONG_DESCRIPTOR     );
     if(errors & STACK_DESCRIPTOR_NOT_ADDED  ) print_error(STACK_DESCRIPTOR_NOT_ADDED );
+    if(errors & STACK_CTOR_DATA_CALLOC      ) print_error(STACK_CTOR_DATA_CALLOC     );
 }
 
 void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret){

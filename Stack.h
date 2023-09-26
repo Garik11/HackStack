@@ -19,7 +19,7 @@ struct Stack;
 enum StackErrors{
     STACK_ALL_OK                    = 0 << 0 ,
     STACK_NOT_DEFINED               = 1 << 0 ,
-    STACK_CTOR_CALLOC               = 1 << 1 ,
+    STACK_CTOR_GETSTACK             = 1 << 1 ,
     STACK_DATA_NOT_DEFINED          = 1 << 2 ,
     STACK_SIZE_MISMATCH             = 1 << 3 ,
     STACK_MULTIPLY_CALLOC           = 1 << 4 ,
@@ -33,7 +33,10 @@ enum StackErrors{
     STACK_BAD_DATA_CALIBRI          = 1 << 12,
     STACK_WRONG_DESCRIPTOR          = 1 << 13,
     STACK_DESCRIPTOR_NOT_ADDED      = 1 << 14,
-    STACK_DESCRIPTOR_NOT_DELETED    = 1 << 15
+    STACK_DESCRIPTOR_NOT_DELETED    = 1 << 15,
+    STACK_CTOR_DATA_CALLOC          = 1 << 16,
+    STACK_GET_ERROR                 = 1 << 17,
+    STACK_NULLIFICATOR_BAD          = 1 << 18
 };
 
 Stack*  StackCtor(const char* CREATION_FILE, int CREATION_LINE, const char* CREATION_FUNC, StackErrorsBitmask* err_ret = NULL);

@@ -256,6 +256,7 @@ void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret){
 
 void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, const char* FILE_NAME, int LINE, const char* FUNC){
 
+    printf(MY_BEST_BUG);
     errors |= StackVerificator(stk);
     
     StackCheckAllErrors(errors);

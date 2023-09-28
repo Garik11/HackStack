@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "Stack.h"
-#include "Best_cat_welcome.h"
-#include "config.h"
+
 //#include "StackStruct.h"
 //#include "StackHidden.h"
 //Массив стэков                                             ++
@@ -25,6 +24,8 @@
 int main(void){
     printf(MY_BEST_STACK);
     printf(MY_BEST_CAT);
+
+
     StackErrorsBitmask error = STACK_ALL_OK;
     Stack *stk = STACK_CTOR(&error);
     for(size_t i = 0; i < 10000; i++){
@@ -33,4 +34,6 @@ int main(void){
     for(size_t i = 0; i < 10000; i++)
         printf("%d\n", StackPop(stk, &error));
     StackDtor(stk);
+
+    
 }

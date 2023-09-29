@@ -7,6 +7,9 @@
 #include "Stack.h"
 #include "StackStruct.h"
 #include "StackArray.h"
+#include "StackCalibri.h"
+#include "StackHash.h"
+
 #include "recalloc.h"
 #include "config.h"
 

@@ -1,10 +1,5 @@
 #include "StackHidden.h"
 
-#ifdef DEBUG
-    #include "StackProtect.h"
-    //#include "StackDescriptor.h"
-#endif //DEBUG
-
 Stack* StackCtor(const char*    CREATION_FILE, 
                 int             CREATION_LINE, 
                 const char*     CREATION_FUNC, 

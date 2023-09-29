@@ -3,6 +3,9 @@
 
     #define DEBUG
 
+    #define USE_HASH
+    #define USE_CALIBRI
+
     typedef int Elem_t;
     #define specifier_Elem_t "%d"
 
@@ -14,5 +17,18 @@
     #else
         #define ON_DEBUG(...)
     #endif
+
+    #ifdef USE_HASH
+        #define ON_HASH(...) __VA_ARGS__
+    #else
+        #define ON_HASH(...)
+    #endif
+
+    #ifdef USE_CALIBRI
+        #define ON_CALIBRI(...) __VA_ARGS__
+    #else
+        #define ON_CALIBRI(...)
+    #endif
+
 
 #endif // !CONFIG_H

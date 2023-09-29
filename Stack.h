@@ -16,7 +16,6 @@ typedef unsigned long long Calibri;
 
 struct Stack;
 
-//hex
 enum StackErrors{
     STACK_ALL_OK                    = 0 << 0 ,
     STACK_NOT_DEFINED               = 1 << 0 ,
@@ -33,9 +32,9 @@ enum StackErrors{
     STACK_BAD_STRUCT_CALIBRI        = 1 << 11,
     STACK_BAD_DATA_CALIBRI          = 1 << 12,
     STACK_WRONG_DESCRIPTOR          = 1 << 13,
-    STACK_CTOR_DATA_CALLOC          = 1 << 16,
-    STACK_GET_ERROR                 = 1 << 17,
-    STACK_NULLIFICATOR_BAD          = 1 << 18
+    STACK_CTOR_DATA_CALLOC          = 1 << 14,
+    STACK_GET_ERROR                 = 1 << 15,
+    STACK_NULLIFICATOR_BAD          = 1 << 16
 };
 
 Stack*  StackCtor(const char* CREATION_FILE, int CREATION_LINE, const char* CREATION_FUNC, StackErrorsBitmask* err_ret = NULL);

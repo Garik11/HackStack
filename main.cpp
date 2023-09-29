@@ -22,18 +22,13 @@
 //alt alt alt hex-redactor DOS
 
 int main(void){
-    
+
     printf(MY_BEST_STACK);
     printf(MY_BEST_CAT);
 
     StackErrorsBitmask error = STACK_ALL_OK;
     Stack *stk = STACK_CTOR(&error);
-    for(size_t i = 0; i < 10000; i++){
-        StackPush(stk, i*i, &error);  
-    }
-    //*((int*)stk) = 100;
     for(size_t i = 0; i < 10000; i++)
-        printf("%d\n", StackPop(stk, &error));
-    StackDtor(stk);
+        stk = STACK_CTOR(&error);
     
 }

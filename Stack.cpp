@@ -10,7 +10,7 @@ Stack* StackCtor(const char*    CREATION_FILE,
 
     Stack* stk = NULL;
     StackGetStack(&stk, &errors);
-    errors = STACK_SET_ERROR(stk != NULL, STACK_CTOR_GETSTACK);
+    errors |= STACK_SET_ERROR(stk != NULL, STACK_CTOR_GETSTACK);
     if(errors != STACK_ALL_OK){
         ON_DEBUG(
             BAD_STACK_DUMP(stk, errors);
@@ -32,7 +32,7 @@ Stack* StackCtor(const char*    CREATION_FILE,
         stk->data = (char*)calloc(sizeof(BYTE), DATA_STANDART_SIZE * sizeof(Elem_t));
     #endif
 
-    errors = STACK_SET_ERROR(stk->data != NULL, STACK_CTOR_DATA_CALLOC);
+    errors |= STACK_SET_ERROR(stk->data != NULL, STACK_CTOR_DATA_CALLOC);
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
@@ -132,6 +132,7 @@ void StackCheckAllErrors(StackErrorsBitmask errors){
     if(errors & STACK_BAD_DATA_CALIBRI      ) print_error(STACK_BAD_DATA_CALIBRI     );
     if(errors & STACK_WRONG_DESCRIPTOR      ) print_error(STACK_WRONG_DESCRIPTOR     );
     if(errors & STACK_CTOR_DATA_CALLOC      ) print_error(STACK_CTOR_DATA_CALLOC     );
+    if(errors & STACK_GET_ERROR             ) print_error(STACK_GET_ERROR     );
     if(errors & STACK_NULLIFICATOR_BAD      ) print_error(STACK_NULLIFICATOR_BAD     );
 }
 

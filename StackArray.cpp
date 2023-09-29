@@ -1,7 +1,9 @@
 #include "StackArray.h"
 
 void StackNullificator (Stack *stk, StackErrorsBitmask* err_ret){
+
     StackErrorsBitmask errors = StackVerificator(stk);
+
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
@@ -15,7 +17,6 @@ void StackNullificator (Stack *stk, StackErrorsBitmask* err_ret){
 
     stk->capaticy = 0;
     stk->size = 0;
-    //printf("stk->data : %p\n", stk->data);
     free(stk->data);
     stk->data = NULL;
 
@@ -41,7 +42,9 @@ bool StackCheckExistence (Stack* stk){
 }
 
 bool StackCheckNullificator (Stack *stk, StackErrorsBitmask* err_ret){
+
     StackErrorsBitmask errors = STACK_ALL_OK;
+
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
@@ -81,7 +84,7 @@ void StackGetStack (Stack** stk, StackErrorsBitmask* err_ret){
             return;
 
         }
-    *err_ret = STACK_SET_ERROR(false, STACK_GET_ERROR);
+    errors |= STACK_SET_ERROR(false, STACK_GET_ERROR);
 
     ON_DEBUG(
         BAD_STACK_DUMP(*stk, errors);

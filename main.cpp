@@ -28,7 +28,9 @@ int main(void){
 
     StackErrorsBitmask error = STACK_ALL_OK;
     Stack *stk = STACK_CTOR(&error);
-    for(size_t i = 0; i < 10000; i++)
-        stk = STACK_CTOR(&error);
-    
+    for(int i = 0; i < 10000; i++)
+        StackPush(stk, i*i, &error);
+    for(int i = 0; i < 10000; i++)
+        printf("%d\n", StackPop(stk, &error));
+    StackDtor(stk, &error);
 }

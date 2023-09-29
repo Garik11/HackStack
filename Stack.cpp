@@ -21,16 +21,17 @@ Stack* StackCtor(const char*    CREATION_FILE,
         return NULL;
     }
 
-    ON_DEBUG(
+    ON_CALIBRI(
         stk->calibri_left  = (Calibri)stk;
         stk->calibri_right = (Calibri)(stk->calibri_left + sizeof(stk));
     )
 
-    #ifdef DEBUG
+    #ifdef USE_CALIBRI
         stk->data = (char*)calloc(sizeof(BYTE), DATA_STANDART_SIZE * sizeof(Elem_t) + 2 * sizeof(Calibri));
     #else
         stk->data = (char*)calloc(sizeof(BYTE), DATA_STANDART_SIZE * sizeof(Elem_t));
     #endif
+
     errors = STACK_SET_ERROR(stk->data != NULL, STACK_CTOR_DATA_CALLOC);
     if(errors != STACK_ALL_OK){
 
@@ -48,19 +49,18 @@ Stack* StackCtor(const char*    CREATION_FILE,
     stk->capaticy       = DATA_STANDART_SIZE;
 
     ON_DEBUG(
-        //DESCRIPTORADD(stk, &errors);
-        //if(errors != STACK_ALL_OK)
-         //   BAD_STACK_DUMP(stk, errors);
         stk->CREATION_FILE = CREATION_FILE;
         stk->CREATION_LINE = CREATION_LINE;
         stk->CREATION_FUNC = CREATION_FUNC;
-
+    )
+    ON_CALIBRI(
         *((Calibri*)stk->data) =
           (Calibri )(stk->data);
 
         *((Calibri*)(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri))) =
           (Calibri )(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri));
-          
+    )
+    ON_HASH(
         stk->datahash   = StackGetDataHash  (stk);
         stk->structhash = StackGetStructHash(stk);
     )
@@ -89,28 +89,28 @@ void StackDtor(Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
         *err_ret |= errors;
 }
 
-StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask basicerror){
+StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask basicerror /* = STACK_ALL_OK */){
 
     StackErrorsBitmask errors = basicerror;
 
-    #ifdef DEBUG
-        if(StackCheckExistence(stk) == false)    return STACK_NOT_DEFINED | STACK_WRONG_DESCRIPTOR;
-    #else
-        if(stk == NULL)                     return STACK_NOT_DEFINED;
-    #endif
+    if(StackCheckExistence(stk) == false) 
+        return STACK_NOT_DEFINED | STACK_WRONG_DESCRIPTOR;
 
     if(stk->data == NULL)                                           errors |= STACK_DATA_NOT_DEFINED;
     if(stk->size > stk->capaticy)                                   errors |= STACK_SIZE_MISMATCH;
     if(stk->size == POISONED_NUM || stk->capaticy == POISONED_NUM)  errors |= STACK_IS_POISONED;
 
-    ON_DEBUG(
-        if(StackCmpStructCalibri(stk) == false )    errors |= STACK_BAD_STRUCT_CALIBRI;
-        if(StackCmpStructHash   (stk) == false )    errors |= STACK_BAD_STRUCT_HASH;
-        else{
-            //If something is wrong with the structure, then the pointer cannot be dereferenced.
-            if(StackCmpDataHash     (stk) == false) errors |= STACK_BAD_DATA_HASH;
-            if(StackCmpDataCalibri  (stk) == false) errors |= STACK_BAD_DATA_CALIBRI;
-        }
+    ON_HASH(
+        if(StackCmpStructHash   (stk) == false)    
+            errors |= STACK_BAD_STRUCT_HASH;
+        else if(StackCmpDataHash     (stk) == false)     
+            errors |= STACK_BAD_DATA_HASH;
+    )
+    ON_CALIBRI(
+        if(StackCmpStructCalibri(stk) == false )    
+            errors |= STACK_BAD_STRUCT_CALIBRI;
+        else if(StackCmpDataCalibri  (stk) == false) 
+            errors |= STACK_BAD_DATA_CALIBRI;
     )
 
     return errors;
@@ -118,7 +118,7 @@ StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask basicerror){
 
 void StackCheckAllErrors(StackErrorsBitmask errors){
     if(errors & STACK_NOT_DEFINED           ) print_error(STACK_NOT_DEFINED          );
-    if(errors & STACK_CTOR_GETSTACK         ) print_error(STACK_CTOR_GETSTACK          );
+    if(errors & STACK_CTOR_GETSTACK         ) print_error(STACK_CTOR_GETSTACK        );
     if(errors & STACK_DATA_NOT_DEFINED      ) print_error(STACK_DATA_NOT_DEFINED     );
     if(errors & STACK_SIZE_MISMATCH         ) print_error(STACK_SIZE_MISMATCH        );
     if(errors & STACK_MULTIPLY_CALLOC       ) print_error(STACK_MULTIPLY_CALLOC      );
@@ -131,11 +131,11 @@ void StackCheckAllErrors(StackErrorsBitmask errors){
     if(errors & STACK_BAD_STRUCT_CALIBRI    ) print_error(STACK_BAD_STRUCT_CALIBRI   );
     if(errors & STACK_BAD_DATA_CALIBRI      ) print_error(STACK_BAD_DATA_CALIBRI     );
     if(errors & STACK_WRONG_DESCRIPTOR      ) print_error(STACK_WRONG_DESCRIPTOR     );
-    if(errors & STACK_DESCRIPTOR_NOT_ADDED  ) print_error(STACK_DESCRIPTOR_NOT_ADDED );
     if(errors & STACK_CTOR_DATA_CALLOC      ) print_error(STACK_CTOR_DATA_CALLOC     );
+    if(errors & STACK_NULLIFICATOR_BAD      ) print_error(STACK_NULLIFICATOR_BAD     );
 }
 
-void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret){
+void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     StackErrorsBitmask errors = StackVerificator(stk);
     if(errors != STACK_ALL_OK){
@@ -161,20 +161,14 @@ void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret){
         return;
     }
 
-    #ifdef DEBUG
-    void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri),
-                                                sizeof(BYTE), stk->capaticy * sizeof(Elem_t) + 2 * sizeof(Calibri));
+    #ifdef USE_CALIBRI
+        void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri),
+                                                    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) + 2 * sizeof(Calibri));
     #else
-    void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->size * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER,
-                                                sizeof(BYTE), stk->size * sizeof(Elem_t));
-    #endif // DEBUG
-    /*
-    #ifdef DEBUG
-        void* new_str_data = realloc(stk->data, stk->size * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri));
-    #else
-        void* new_str_data = realloc(stk->data, stk->size * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER);
-    #endif
-    */
+        void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER,
+                                                    sizeof(BYTE), stk->capaticy * sizeof(Elem_t));
+    #endif // USE_CALIBRI
+
     errors = STACK_SET_ERROR(new_str_data != NULL, STACK_MULTIPLY_CALLOC);
     if(errors != STACK_ALL_OK){
 
@@ -189,7 +183,7 @@ void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret){
 
     stk->data = (char*)new_str_data;
     stk->capaticy *= STACK_SIZE_MULTIPLIER;
-    ON_DEBUG(
+    ON_CALIBRI(
         *((Calibri*)stk->data) = 
           (Calibri )stk->data;
 
@@ -198,7 +192,7 @@ void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret){
     )
 }
 
-void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret){
+void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     StackErrorsBitmask errors = StackVerificator(stk);
     if(errors != STACK_ALL_OK){
@@ -211,21 +205,15 @@ void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret){
             *err_ret |= errors;
         return;
     }
-    #ifdef DEBUG
-    void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) / STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri),
-                                                sizeof(BYTE), stk->capaticy * sizeof(Elem_t) + 2 * sizeof(Calibri));
+    
+    #ifdef USE_CALIBRI
+        void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) / STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri),
+                                                    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) + 2 * sizeof(Calibri));
     #else
-    void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->size * sizeof(Elem_t) / STACK_SIZE_MULTIPLIER,
-                                                sizeof(BYTE), stk->size * sizeof(Elem_t));
-    #endif // DEBUG
+        void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) / STACK_SIZE_MULTIPLIER,
+                                                    sizeof(BYTE), stk->capaticy * sizeof(Elem_t));
+    #endif // USE_CALIBRI
 
-    /*
-    #ifdef DEBUG
-        void* new_str_data = realloc(stk->data, stk->size * sizeof(Elem_t) / STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri));
-    #else
-        void* new_str_data = realloc(stk->data, stk->size * sizeof(Elem_t) / STACK_SIZE_MULTIPLIER);
-    #endif
-    */
     errors = STACK_SET_ERROR(new_str_data != NULL, STACK_DIVIDER_CALLOC);
     if(errors != STACK_ALL_OK){
 
@@ -240,7 +228,7 @@ void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret){
 
     stk->data = (char*)new_str_data;
     stk->capaticy /= STACK_SIZE_MULTIPLIER;
-    ON_DEBUG(
+    ON_CALIBRI(
         *((Calibri*)stk->data) = 
           (Calibri)stk->data;
 
@@ -337,16 +325,16 @@ void StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret /* = NULL
             *err_ret |= errors;
         return;
     }
-
-    #ifdef DEBUG
+    
+    #ifdef USE_CALIBRI
         *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) = element;
     #else
-        *((Elem_t*)(stk->data + stk->capacity * sizeof(Elem_t))) = element;
-    #endif // DEBUG
+        *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t))) = element;
+    #endif // USE_CALIBRI
 
     stk->size++;
 
-    ON_DEBUG(
+    ON_HASH(
         stk->datahash   = StackGetDataHash  (stk);
         stk->structhash = StackGetStructHash(stk);
     )
@@ -384,14 +372,14 @@ Elem_t StackPop (Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     stk->size--;
 
-    ON_DEBUG(
+    ON_HASH(
         stk->datahash   = StackGetDataHash  (stk);
         stk->structhash = StackGetStructHash(stk);
     )
 
-    #ifdef DEBUG
+    #ifdef USE_CALIBRI
         return *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri)));
     #else
-        return *((Elem_t*)(stk->data + stk->capacity * sizeof(Elem_t)));
-    #endif // DEBUG
+        return *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t)));
+    #endif // USE_CALIBRI
 }

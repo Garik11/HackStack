@@ -2,7 +2,6 @@
     #define CONFIG_H
 
     #define DEBUG
-
     #define USE_HASH
     #define USE_CALIBRI
 

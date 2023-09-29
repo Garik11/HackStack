@@ -36,7 +36,7 @@ StackErrorsBitmask StackVerificator (Stack *stk, StackErrorsBitmask basicerror =
 
 void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, const char* FILE_NAME, int LINE, const char* FUNC);
 
-void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret);
-void StackSizeDivider   (Stack* stk, StackErrorsBitmask* err_ret);
+void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret = NULL);
+void StackSizeDivider   (Stack* stk, StackErrorsBitmask* err_ret = NULL);
 
-#endif
+#endif // !STACK_HIDDEN_H

@@ -33,8 +33,6 @@ enum StackErrors{
     STACK_BAD_STRUCT_CALIBRI        = 1 << 11,
     STACK_BAD_DATA_CALIBRI          = 1 << 12,
     STACK_WRONG_DESCRIPTOR          = 1 << 13,
-    STACK_DESCRIPTOR_NOT_ADDED      = 1 << 14,
-    STACK_DESCRIPTOR_NOT_DELETED    = 1 << 15,
     STACK_CTOR_DATA_CALLOC          = 1 << 16,
     STACK_GET_ERROR                 = 1 << 17,
     STACK_NULLIFICATOR_BAD          = 1 << 18

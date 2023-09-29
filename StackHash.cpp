@@ -1,4 +1,5 @@
-#include "StackProtect.h"
+#include "StackHash.h"
+
 #ifdef DEBUG
 HASH StackGetStructHash(Stack *stk, uint64_t seed){
 
@@ -30,16 +31,4 @@ bool StackCmpDataHash  (Stack *stk, uint64_t seed){
     return hash_from_stk == hach_real_stk;
 }
 
-bool StackCmpStructCalibri(Stack* stk){
-    return  stk->calibri_left  == (unsigned long long)stk &&
-            stk->calibri_right == (unsigned long long)stk + sizeof(stk);
-}
-
-bool StackCmpDataCalibri(Stack* stk){
-    return *((Calibri*)stk->data) == 
-             (Calibri )stk->data &&
-
-           *((Calibri*)(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri))) == 
-             (Calibri )(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri));
-}
 #endif

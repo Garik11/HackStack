@@ -49,8 +49,8 @@ Stack* StackCtor(const char*    CREATION_FILE,
             *err_ret |= errors;
         return NULL;
     }
-    stk->capacity   = STARTING_POSITION ;
-    stk->size       = DATA_STANDART_SIZE;
+    stk->size   = STARTING_POSITION ;
+    stk->capaticy       = DATA_STANDART_SIZE;
 
     ON_DEBUG(
         //DESCRIPTORADD(stk, &errors);
@@ -63,8 +63,8 @@ Stack* StackCtor(const char*    CREATION_FILE,
         *((Calibri*)stk->data) =
           (Calibri )(stk->data);
 
-        *((Calibri*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) =
-          (Calibri )(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri));
+        *((Calibri*)(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri))) =
+          (Calibri )(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri));
           
         stk->datahash   = StackGetDataHash  (stk);
         stk->structhash = StackGetStructHash(stk);
@@ -105,8 +105,8 @@ StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask basicerror){
     #endif
 
     if(stk->data == NULL)                                           errors |= STACK_DATA_NOT_DEFINED;
-    if(stk->capacity > stk->size)                                   errors |= STACK_SIZE_MISMATCH;
-    if(stk->capacity == POISONED_NUM || stk->size == POISONED_NUM)  errors |= STACK_IS_POISONED;
+    if(stk->size > stk->capaticy)                                   errors |= STACK_SIZE_MISMATCH;
+    if(stk->size == POISONED_NUM || stk->capaticy == POISONED_NUM)  errors |= STACK_IS_POISONED;
 
     ON_DEBUG(
         if(StackCmpStructCalibri(stk) == false )    errors |= STACK_BAD_STRUCT_CALIBRI;
@@ -154,7 +154,7 @@ void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret){
         return;
     }
 
-    errors = STACK_SET_ERROR(stk->size * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER < INT_MAX, STACK_TOO_BIG);
+    errors = STACK_SET_ERROR(stk->capaticy * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER < INT_MAX, STACK_TOO_BIG);
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
@@ -167,8 +167,8 @@ void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret){
     }
 
     #ifdef DEBUG
-    void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->size * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri),
-                                                sizeof(BYTE), stk->size * sizeof(Elem_t) + 2 * sizeof(Calibri));
+    void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri),
+                                                sizeof(BYTE), stk->capaticy * sizeof(Elem_t) + 2 * sizeof(Calibri));
     #else
     void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->size * sizeof(Elem_t) * STACK_SIZE_MULTIPLIER,
                                                 sizeof(BYTE), stk->size * sizeof(Elem_t));
@@ -193,13 +193,13 @@ void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret){
     }
 
     stk->data = (char*)new_str_data;
-    stk->size *= STACK_SIZE_MULTIPLIER;
+    stk->capaticy *= STACK_SIZE_MULTIPLIER;
     ON_DEBUG(
         *((Calibri*)stk->data) = 
           (Calibri )stk->data;
 
-        *((Calibri*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) = 
-          (Calibri )(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri));
+        *((Calibri*)(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri))) = 
+          (Calibri )(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri));
     )
 }
 
@@ -217,8 +217,8 @@ void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret){
         return;
     }
     #ifdef DEBUG
-    void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->size * sizeof(Elem_t) / STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri),
-                                                sizeof(BYTE), stk->size * sizeof(Elem_t) + 2 * sizeof(Calibri));
+    void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->capaticy * sizeof(Elem_t) / STACK_SIZE_MULTIPLIER + 2 * sizeof(Calibri),
+                                                sizeof(BYTE), stk->capaticy * sizeof(Elem_t) + 2 * sizeof(Calibri));
     #else
     void* new_str_data = recalloc(stk->data,    sizeof(BYTE), stk->size * sizeof(Elem_t) / STACK_SIZE_MULTIPLIER,
                                                 sizeof(BYTE), stk->size * sizeof(Elem_t));
@@ -244,13 +244,13 @@ void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret){
     }
 
     stk->data = (char*)new_str_data;
-    stk->size /= STACK_SIZE_MULTIPLIER;
+    stk->capaticy /= STACK_SIZE_MULTIPLIER;
     ON_DEBUG(
         *((Calibri*)stk->data) = 
           (Calibri)stk->data;
 
-        *((Calibri*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) = 
-          (Calibri )(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri));
+        *((Calibri*)(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri))) = 
+          (Calibri )(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri));
     )
 }
 
@@ -268,8 +268,8 @@ void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, co
     }
     if(errors & STACK_BAD_STRUCT_HASH || errors & STACK_BAD_STRUCT_CALIBRI){
         printf("Stack[%p] \"%s\" called from file:%s(%d) func:%s\n", stk, STACK_NAME, FILE_NAME, LINE, FUNC);
-        printf("\t{size     = %lu\n", stk->size);
-        printf("\t capacity = %lu\n", stk->capacity);
+        printf("\t{size     = %lu\n", stk->capaticy);
+        printf("\t capacity = %lu\n", stk->size);
         printf("\t data[error]\n");
         printf("\t}\n");
         return;
@@ -287,8 +287,8 @@ void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, co
             FILE_NAME, LINE, FUNC);
     #endif
 
-    printf("\t{size     = %lu\n", stk->size);
-    printf("\t capacity = %lu\n", stk->capacity);
+    printf("\t{size     = %lu\n", stk->capaticy);
+    printf("\t capacity = %lu\n", stk->size);
 
     /*if stk->data == NULL*/
     if(errors & STACK_DATA_NOT_DEFINED){
@@ -297,7 +297,7 @@ void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, co
         return;
     }
 
-    size_t number_of_elements = stk->size;
+    size_t number_of_elements = stk->capaticy;
 
     #ifdef linux
         size_t size_data = malloc_usable_size(stk->data);
@@ -329,7 +329,7 @@ void StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret /* = NULL
         return;
     }
 
-    if(stk->capacity + 1 == stk->size)
+    if(stk->size + 1 == stk->capaticy)
         StackSizeMultiplier(stk, &errors);
 
     if(errors != STACK_ALL_OK){
@@ -344,12 +344,12 @@ void StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret /* = NULL
     }
 
     #ifdef DEBUG
-        *((Elem_t*)(stk->data + stk->capacity * sizeof(Elem_t) + sizeof(Calibri))) = element;
+        *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) = element;
     #else
         *((Elem_t*)(stk->data + stk->capacity * sizeof(Elem_t))) = element;
     #endif // DEBUG
 
-    stk->capacity++;
+    stk->size++;
 
     ON_DEBUG(
         stk->datahash   = StackGetDataHash  (stk);
@@ -371,10 +371,10 @@ Elem_t StackPop (Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
         return 0;
     }
 
-    if(stk->capacity * STACK_SIZE_MULTIPLIER < stk->size && stk->size > DATA_STANDART_SIZE)
+    if(stk->size * STACK_SIZE_MULTIPLIER < stk->capaticy && stk->capaticy > DATA_STANDART_SIZE)
         StackSizeDivider(stk, &errors);
 
-    errors = STACK_SET_ERROR(stk->capacity != 0, STACK_IS_EMPTY);
+    errors = STACK_SET_ERROR(stk->size != 0, STACK_IS_EMPTY);
 
     if(errors != STACK_ALL_OK){
 
@@ -387,7 +387,7 @@ Elem_t StackPop (Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
         return 0;
     }
 
-    stk->capacity--;
+    stk->size--;
 
     ON_DEBUG(
         stk->datahash   = StackGetDataHash  (stk);
@@ -395,7 +395,7 @@ Elem_t StackPop (Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
     )
 
     #ifdef DEBUG
-        return *((Elem_t*)(stk->data + stk->capacity * sizeof(Elem_t) + sizeof(Calibri)));
+        return *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri)));
     #else
         return *((Elem_t*)(stk->data + stk->capacity * sizeof(Elem_t)));
     #endif // DEBUG

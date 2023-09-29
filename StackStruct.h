@@ -16,8 +16,8 @@ struct Stack {
 
     char *data;
 
+    size_t capaticy;
     size_t size;
-    size_t capacity;
 
     ON_DEBUG(
         const char* CREATION_FILE;

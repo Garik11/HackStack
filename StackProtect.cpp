@@ -14,7 +14,7 @@ HASH StackGetStructHash(Stack *stk, uint64_t seed){
 
 HASH StackGetDataHash(Stack *stk, uint64_t seed){
     return (stk->data == NULL) ? 0 :
-        HashNoCommutate(stk->data, stk->size * sizeof(Elem_t) + 2 * sizeof(Calibri), seed,
+        HashNoCommutate(stk->data, stk->capaticy * sizeof(Elem_t) + 2 * sizeof(Calibri), seed,
             0xF00, 0xc2b2ae35, 0x9);
 }
 
@@ -39,7 +39,7 @@ bool StackCmpDataCalibri(Stack* stk){
     return *((Calibri*)stk->data) == 
              (Calibri )stk->data &&
 
-           *((Calibri*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) == 
-             (Calibri )(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri));
+           *((Calibri*)(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri))) == 
+             (Calibri )(stk->data + stk->capaticy * sizeof(Elem_t) + sizeof(Calibri));
 }
 #endif

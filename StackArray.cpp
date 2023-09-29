@@ -13,8 +13,8 @@ void StackNullificator (Stack *stk, StackErrorsBitmask* err_ret){
         return;
     }
 
+    stk->capaticy = 0;
     stk->size = 0;
-    stk->capacity = 0;
     free(stk->data);
     stk->data = NULL;
 
@@ -50,7 +50,7 @@ bool StackCheckNullificator (Stack *stk, StackErrorsBitmask* err_ret){
 
     bool status = FILLED;
 
-    if(stk->size == 0) status = EMPTY;
+    if(stk->capaticy == 0) status = EMPTY;
     if(stk->data == NULL) status = EMPTY;
 
     return status;

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "Stack.h"
 
-#include "StackStruct.h"
+//#include "StackStruct.h"
 //#include "StackHidden.h"
 //Массив стэков                                             ++
 //Внутренний заголовок маин не инключ спп инклюд            ++
@@ -22,9 +22,9 @@
 //alt alt alt hex-redactor DOS
 
 int main(void){
+    
     printf(MY_BEST_STACK);
     printf(MY_BEST_CAT);
-
 
     StackErrorsBitmask error = STACK_ALL_OK;
     Stack *stk = STACK_CTOR(&error);
@@ -35,6 +35,5 @@ int main(void){
     for(size_t i = 0; i < 10000; i++)
         printf("%d\n", StackPop(stk, &error));
     StackDtor(stk);
-
     
 }

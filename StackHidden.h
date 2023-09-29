@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <limits.h>
 #include <stdint.h>
+
 #include "Stack.h"
 #include "StackStruct.h"
 #include "StackArray.h"
@@ -34,7 +35,13 @@ const size_t STACK_SIZE_MULTIPLIER  = 2;
 
 StackErrorsBitmask StackVerificator (Stack *stk, StackErrorsBitmask basicerror = STACK_ALL_OK);
 
-void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, const char* FILE_NAME, int LINE, const char* FUNC);
+void StackDump( Stack *stk, 
+                StackErrorsBitmask errors, 
+                const char* STACK_NAME, 
+                const char* FILE_NAME, 
+                int LINE, 
+                const char* FUNC
+            );
 
 void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret = NULL);
 void StackSizeDivider   (Stack* stk, StackErrorsBitmask* err_ret = NULL);

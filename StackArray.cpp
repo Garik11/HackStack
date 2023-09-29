@@ -15,14 +15,19 @@ void StackNullificator (Stack *stk, StackErrorsBitmask* err_ret){
 
     stk->capaticy = 0;
     stk->size = 0;
+    //printf("stk->data : %p\n", stk->data);
     free(stk->data);
     stk->data = NULL;
 
     ON_DEBUG(
-        stk->calibri_left = 0;
-        stk->calibri_right = 0;
         stk->CREATION_FILE = NULL;
         stk->CREATION_FUNC = NULL;
+    )
+    ON_CALIBRI(
+        stk->calibri_left = 0;
+        stk->calibri_right = 0;
+    )
+    ON_HASH(
         stk->datahash = 0;
         stk->structhash = 0;
     )
@@ -50,8 +55,8 @@ bool StackCheckNullificator (Stack *stk, StackErrorsBitmask* err_ret){
 
     bool status = FILLED;
 
-    if(stk->capaticy == 0) status = EMPTY;
-    if(stk->data == NULL) status = EMPTY;
+    if(stk->capaticy == 0)  status = EMPTY;
+    if(stk->data == NULL)   status = EMPTY;
 
     return status;
 }

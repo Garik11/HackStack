@@ -1,5 +1,6 @@
 #include "StackHash.h"
 
+#ifdef USE_HASH
 HASH StackGetStructHash(Stack *stk, uint64_t seed /* = 5461216 */){
 
     HASH backup = stk->structhash;
@@ -46,3 +47,4 @@ bool StackCmpDataHash  (Stack *stk, uint64_t seed /* = 5461216 */){
     HASH hach_real_stk = StackGetDataHash(stk, seed);
     return hash_from_stk == hach_real_stk;
 }
+#endif // !USE_HASH

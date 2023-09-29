@@ -101,15 +101,15 @@ StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask basicerror /*
     if(stk->size == POISONED_NUM || stk->capaticy == POISONED_NUM)  errors |= STACK_IS_POISONED;
 
     ON_HASH(
-        if(StackCmpStructHash   (stk) == false)    
+        if(StackCmpStructHash       (stk) == false)    
             errors |= STACK_BAD_STRUCT_HASH;
-        else if(StackCmpDataHash     (stk) == false)     
+        else if(StackCmpDataHash    (stk) == false)     
             errors |= STACK_BAD_DATA_HASH;
     )
     ON_CALIBRI(
-        if(StackCmpStructCalibri(stk) == false )    
+        if(StackCmpStructCalibri    (stk) == false)    
             errors |= STACK_BAD_STRUCT_CALIBRI;
-        else if(StackCmpDataCalibri  (stk) == false) 
+        else if(StackCmpDataCalibri (stk) == false) 
             errors |= STACK_BAD_DATA_CALIBRI;
     )
 
@@ -330,7 +330,7 @@ void StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret /* = NULL
         *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) = element;
     #else
         *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t))) = element;
-    #endif // USE_CALIBRI
+    #endif // !USE_CALIBRI
 
     stk->size++;
 
@@ -381,5 +381,5 @@ Elem_t StackPop (Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
         return *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri)));
     #else
         return *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t)));
-    #endif // USE_CALIBRI
+    #endif // !USE_CALIBRI
 }

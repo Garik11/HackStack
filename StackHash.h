@@ -1,5 +1,5 @@
-#ifndef STACK_PROTECT_H
-#define STACK_PROTECT_H
+#ifndef STACK_HASH_H
+#define STACK_HASH_H
 
 #include <stdint.h>
 #include "Hash.h"

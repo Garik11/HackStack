@@ -1,5 +1,5 @@
 # HackStack
 ## Compile
-```
-./bashcompile
+```bash
+make
 ```

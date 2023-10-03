@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "Stack/Stack.h"
+#include "src/Stack/Stack.h"
 //#include "Stack/StackStruct.h"
 //#include "StackHidden.h"
 //Массив стэков                                             ++

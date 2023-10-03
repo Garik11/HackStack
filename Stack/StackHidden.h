@@ -11,7 +11,7 @@
 #include "StackCalibri.h"
 #include "StackHash.h"
 
-#include "recalloc.h"
+#include "../recalloc/recalloc.h"
 #include "config.h"
 
 //stderr

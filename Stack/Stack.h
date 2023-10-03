@@ -7,7 +7,7 @@
 #include <string.h>
 #include <math.h>
 #include "config.h"
-#include "Best_cat_welcome.h"
+#include "BestWelcome.h"
 
 #define STACK_CTOR(error) StackCtor(__FILE__, __LINE__, __func__, error)
 

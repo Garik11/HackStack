@@ -28,6 +28,4 @@
     #else
         #define ON_CALIBRI(...)
     #endif
-
-
 #endif // !CONFIG_H

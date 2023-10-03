@@ -5,7 +5,7 @@
 
 #include "Stack.h"
 #include "StackStruct.h"
-#include "Hash.h"
+#include "../Hash/Hash.h"
 
 #include "config.h"
 

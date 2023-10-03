@@ -34,27 +34,14 @@ void StackNullificator (Stack *stk, StackErrorsBitmask* err_ret){
     )
 }
 
+//Допилить
 bool StackCheckExistence (Stack* stk){
-    for(size_t pos = 0; pos < STACK_MAX_SIZE; pos++)
-        if(&StacksArray[pos] == stk)
-            return true;
-    return false;
+
+    return StacksArray >= stk && stk < (StacksArray + STACK_MAX_SIZE) &&
+        ((stk - StacksArray) % sizeof(stk) == 0);
 }
 
-bool StackCheckNullificator (Stack *stk, StackErrorsBitmask* err_ret){
-
-    StackErrorsBitmask errors = STACK_ALL_OK;
-
-    if(errors != STACK_ALL_OK){
-
-        ON_DEBUG(
-            BAD_STACK_DUMP(stk, errors);
-        )
-
-        if(err_ret != NULL)
-            *err_ret |= errors;
-        return FILLED;
-    }
+bool StackCheckNullificator (Stack *stk){
 
     bool status = FILLED;
 
@@ -64,22 +51,14 @@ bool StackCheckNullificator (Stack *stk, StackErrorsBitmask* err_ret){
     return status;
 }
 
+// POISONED ???
 void StackGetStack (Stack** stk, StackErrorsBitmask* err_ret){
 
     StackErrorsBitmask errors = STACK_ALL_OK;
 
     for(size_t i = 0; i < STACK_MAX_SIZE; i++)
-        if(StackCheckNullificator(&StacksArray[i], &errors) == EMPTY){
-            if(errors != STACK_ALL_OK){
+        if(StackCheckNullificator(&StacksArray[i]) == EMPTY){
 
-                ON_DEBUG(
-                    BAD_STACK_DUMP(*stk, errors);
-                )
-
-                if(err_ret != NULL)
-                    *err_ret |= errors;
-                return;
-            }
             *stk = &StacksArray[i];
             return;
 
@@ -97,7 +76,7 @@ void StackGetStack (Stack** stk, StackErrorsBitmask* err_ret){
 
 void StackBackStack(Stack* stk, StackErrorsBitmask* err_ret){
     
-    StackErrorsBitmask errors = STACK_ALL_OK;
+    StackErrorsBitmask errors = StackVerificator(stk);
 
     if(errors != STACK_ALL_OK){
 

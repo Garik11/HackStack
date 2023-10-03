@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include "Stack.h"
 
-//#include "StackStruct.h"
+#include "StackStruct.h"
 //#include "StackHidden.h"
 //Массив стэков                                             ++
 //Внутренний заголовок маин не инключ спп инклюд            ++
 //Можно объявить разные сьркуьуры но одинакового размера    ++ 
 //Отделить hash                                             ++
 //addres санитайзер                                         &&
-//mprotect                                                  ??
+//mprotect                                                  ??//perror("something");
 //Макрос ON_CALIBRI                                         ++
 //дебаг, хэш, калибри отдельно                              ++
 //оптимизировать код новыми макросами                       ++
@@ -28,9 +28,29 @@ int main(void){
 
     StackErrorsBitmask error = STACK_ALL_OK;
     Stack *stk = STACK_CTOR(&error);
-    for(int i = 0; i < 10000; i++)
+    for(int i = 0; i < 1000; i++) 
+        stk = STACK_CTOR(&error);
+    /*
+    for(int i = 0; i < 10000; i++) 
         StackPush(stk, i*i, &error);
     for(int i = 0; i < 10000; i++)
         printf("%d\n", StackPop(stk, &error));
     StackDtor(stk, &error);
+    */
 }
+
+/*
+    StackErrorsBitmask error = STACK_ALL_OK;
+    Stack *stk = STACK_CTOR(&error);
+
+    memset((void*)stk, 0, sizeof(Stack));
+
+    Stack *stk2 = STACK_CTOR(&error);
+
+    printf("%p %p\n", stk, stk2);
+
+    StackPush(stk2, 1000);
+    printf("%d\n", StackPop(stk2));
+
+    printf("%d\n", StackPop(stk2));
+*/

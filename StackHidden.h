@@ -14,6 +14,7 @@
 #include "recalloc.h"
 #include "config.h"
 
+//stderr
 #define print_error(error_code)     printf("ERROR: "#error_code"!\n")
 #define STACK_DUMP(stk, errors)     StackDump(stk, errors, #stk, __FILE__, __LINE__, __PRETTY_FUNCTION__)
 #define BAD_STACK_DUMP(stk, errors) do{StackDump(stk, errors, #stk, __FILE__, __LINE__, __PRETTY_FUNCTION__); exit(-1);}    while(0)

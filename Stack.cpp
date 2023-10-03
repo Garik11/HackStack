@@ -4,19 +4,22 @@ Stack* StackCtor(const char*    CREATION_FILE,
                 int             CREATION_LINE, 
                 const char*     CREATION_FUNC, 
                 StackErrorsBitmask* err_ret /* = NULL */
-){
+            )
+{
 
     StackErrorsBitmask errors = STACK_ALL_OK;
 
     Stack* stk = NULL;
     StackGetStack(&stk, &errors);
+
     errors |= STACK_SET_ERROR(stk != NULL, STACK_CTOR_GETSTACK);
     if(errors != STACK_ALL_OK){
         ON_DEBUG(
             BAD_STACK_DUMP(stk, errors);
         )
 
-        if(err_ret != NULL) *err_ret |= errors;
+        if(err_ret != NULL) 
+            *err_ret |= errors;
 
         return NULL;
     }
@@ -132,13 +135,14 @@ void StackCheckAllErrors(StackErrorsBitmask errors){
     if(errors & STACK_BAD_DATA_CALIBRI      ) print_error(STACK_BAD_DATA_CALIBRI     );
     if(errors & STACK_WRONG_DESCRIPTOR      ) print_error(STACK_WRONG_DESCRIPTOR     );
     if(errors & STACK_CTOR_DATA_CALLOC      ) print_error(STACK_CTOR_DATA_CALLOC     );
-    if(errors & STACK_GET_ERROR             ) print_error(STACK_GET_ERROR     );
+    if(errors & STACK_GET_ERROR             ) print_error(STACK_GET_ERROR            );
     if(errors & STACK_NULLIFICATOR_BAD      ) print_error(STACK_NULLIFICATOR_BAD     );
 }
 
 void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     StackErrorsBitmask errors = StackVerificator(stk);
+
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
@@ -184,6 +188,7 @@ void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     stk->data = (char*)new_str_data;
     stk->capaticy *= STACK_SIZE_MULTIPLIER;
+
     ON_CALIBRI(
         *((Calibri*)stk->data) = 
           (Calibri )stk->data;
@@ -196,6 +201,7 @@ void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
 void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     StackErrorsBitmask errors = StackVerificator(stk);
+
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
@@ -229,6 +235,7 @@ void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     stk->data = (char*)new_str_data;
     stk->capaticy /= STACK_SIZE_MULTIPLIER;
+
     ON_CALIBRI(
         *((Calibri*)stk->data) = 
           (Calibri)stk->data;
@@ -302,6 +309,7 @@ void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, co
 void StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret /* = NULL */){
 
     StackErrorsBitmask errors = StackVerificator(stk);
+
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
@@ -327,6 +335,7 @@ void StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret /* = NULL
         return;
     }
     
+    #warning move data sizeof(calibri) forward
     #ifdef USE_CALIBRI
         *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) = element;
     #else
@@ -344,6 +353,7 @@ void StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret /* = NULL
 Elem_t StackPop (Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     StackErrorsBitmask errors = StackVerificator(stk);
+
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
@@ -359,7 +369,6 @@ Elem_t StackPop (Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
         StackSizeDivider(stk, &errors);
 
     errors = STACK_SET_ERROR(stk->size != 0, STACK_IS_EMPTY);
-
     if(errors != STACK_ALL_OK){
 
         ON_DEBUG(
@@ -379,6 +388,7 @@ Elem_t StackPop (Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
     )
 
     #ifdef USE_CALIBRI
+        //return ((Elem_t*)stk->data)[stk->size]
         return *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri)));
     #else
         return *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t)));

@@ -389,8 +389,12 @@ Elem_t StackPop (Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     #ifdef USE_CALIBRI
         //return ((Elem_t*)stk->data)[stk->size]
-        return *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri)));
+        Elem_t value = *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri)));
+        *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) = 0;
     #else
-        return *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t)));
+        Elem_t value = *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t)));
+        *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t))) = 0;
     #endif // !USE_CALIBRI
+
+    return value;
 }

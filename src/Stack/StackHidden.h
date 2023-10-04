@@ -26,13 +26,13 @@ enum StackStatus{
     FILLED
 };
 
-const size_t POISONED_NUM =     (size_t)-1 / 2;
-const size_t SIZE_T_OVERFLOW =  (size_t)-1;
+static const size_t POISONED_NUM =     (size_t)-1 / 2;
+static const size_t SIZE_T_OVERFLOW =  (size_t)-1;
 
-const size_t DATA_STANDART_SIZE = 16;
-const size_t STARTING_POSITION  = 0;
+static const size_t DATA_STANDART_SIZE = 16;
+static const size_t STARTING_POSITION  = 0;
 
-const size_t STACK_SIZE_MULTIPLIER  = 2;
+static const size_t STACK_SIZE_MULTIPLIER  = 2;
 
 StackErrorsBitmask StackVerificator (Stack *stk, StackErrorsBitmask basicerror = STACK_ALL_OK);
 

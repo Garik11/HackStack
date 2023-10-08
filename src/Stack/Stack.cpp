@@ -92,16 +92,15 @@ void StackDtor(Stack *stk, StackErrorsBitmask* err_ret /* = NULL */){
         *err_ret |= errors;
 }
 
-StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask basicerror /* = STACK_ALL_OK */){
-
-    StackErrorsBitmask errors = basicerror;
+StackErrorsBitmask StackVerificator(Stack *stk, StackErrorsBitmask errors /* = STACK_ALL_OK */){
 
     if(StackCheckExistence(stk) == false) 
         return STACK_NOT_DEFINED | STACK_WRONG_DESCRIPTOR;
 
-    if(stk->data == NULL)                                           errors |= STACK_DATA_NOT_DEFINED;
-    if(stk->size > stk->capaticy)                                   errors |= STACK_SIZE_MISMATCH;
-    if(stk->size == POISONED_NUM || stk->capaticy == POISONED_NUM)  errors |= STACK_IS_POISONED;
+    errors |= STACK_SET_ERROR(  stk->data != NULL,                  STACK_DATA_NOT_DEFINED  );
+    errors |= STACK_SET_ERROR(  stk->size < stk->capaticy,          STACK_SIZE_MISMATCH     );
+    errors |= STACK_SET_ERROR(  stk->size       != POISONED_NUM && 
+                                stk->capaticy   != POISONED_NUM,    STACK_IS_POISONED       );
 
     ON_HASH(
         if(StackCmpStructHash       (stk) == false)    
@@ -139,7 +138,7 @@ void StackCheckAllErrors(StackErrorsBitmask errors){
     if(errors & STACK_NULLIFICATOR_BAD      ) print_error(STACK_NULLIFICATOR_BAD     );
 }
 
-void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
+static void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     StackErrorsBitmask errors = StackVerificator(stk);
 
@@ -198,7 +197,7 @@ void StackSizeMultiplier(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
     )
 }
 
-void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
+static void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
 
     StackErrorsBitmask errors = StackVerificator(stk);
 
@@ -252,13 +251,17 @@ void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, co
     
     StackCheckAllErrors(errors);
 
+    const char* sname = (STACK_NAME == NULL) ? "???" : STACK_NAME   ;
+    const char* fname = (FILE_NAME  == NULL) ? "???" : FILE_NAME    ;
+    const char* func =  (FUNC       == NULL) ? "???" : FUNC         ;
+
     /*if stk == NULL*/
     if(errors & STACK_NOT_DEFINED){
-        printf("Stack[error] \"%s\" called from %s(%d) in %s\n", STACK_NAME , FILE_NAME, LINE, FUNC);
+        printf("Stack[error] \"%s\" called from %s(%d) in %s\n", sname , fname, LINE, func);
         return;
     }
     if(errors & STACK_BAD_STRUCT_HASH || errors & STACK_BAD_STRUCT_CALIBRI){
-        printf("Stack[%p] \"%s\" called from file:%s(%d) func:%s\n", stk, STACK_NAME, FILE_NAME, LINE, FUNC);
+        printf("Stack[%p] \"%s\" called from file:%s(%d) func:%s\n", stk, sname, fname, LINE, func);
         printf("\t{size     = %lu\n", stk->capaticy);
         printf("\t capacity = %lu\n", stk->size);
         printf("\t data[error]\n");
@@ -269,13 +272,13 @@ void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, co
     #ifdef DEBUG
         printf("Stack[%p] \"%s\" created in file:%s(%d) func:%s\n\
             called from file:%s(%d) func:%s\n", 
-            stk, STACK_NAME, 
+            stk, sname, 
             stk->CREATION_FILE, stk->CREATION_LINE, stk->CREATION_FUNC, 
-            FILE_NAME, LINE, FUNC);
+            fname, LINE, func);
     #else
         printf("Stack[%p] \"%s\" called from file:%s(%d) func:%s\n", 
-            stk, STACK_NAME, 
-            FILE_NAME, LINE, FUNC);
+            stk, sname, 
+            fname, LINE, func);
     #endif
 
     printf("\t{size     = %lu\n", stk->capaticy);

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "src/Stack/Stack.h"
-//#include "Stack/StackStruct.h"
+#include "src/Stack/StackStruct.h"
 //#include "StackHidden.h"
 //Массив стэков                                             ++
 //Внутренний заголовок маин не инключ спп инклюд            ++
@@ -27,10 +27,12 @@ int main(void){
     
     StackErrorsBitmask error = STACK_ALL_OK;
     Stack *stk = STACK_CTOR(&error);
-    for(int i = 0; i < 10000; i++) 
+    for(int i = 0; i < 100; i++) 
         StackPush(stk, i*i, &error);
-    for(int i = 0; i < 10000; i++)
+    for(int i = 0; i < 100; i++)
         printf("%d\n", StackPop(stk, &error));
+    STACK_DUMP(stk, STACK_ALL_OK);
+    StackDump(stk, STACK_ALL_OK, "stk", NULL, NULL, NULL);
     StackDtor(stk, &error);
 }
 

@@ -9,7 +9,8 @@
 #include "config.h"
 #include "BestWelcome.h"
 
-#define STACK_CTOR(error) StackCtor(__FILE__, __LINE__, __func__, error)
+#define STACK_CTOR(error)       StackCtor(__FILE__, __LINE__, __func__, error)
+#define STACK_DUMP(stk, errors) StackDump(stk, errors, #stk, __FILE__, __LINE__, __PRETTY_FUNCTION__)
 
 typedef size_t StackErrorsBitmask;
 typedef unsigned long long Calibri;
@@ -37,11 +38,23 @@ enum StackErrors{
     STACK_NULLIFICATOR_BAD          = 1 << 16
 };
 
-Stack*  StackCtor(const char* CREATION_FILE, int CREATION_LINE, const char* CREATION_FUNC, StackErrorsBitmask* err_ret = NULL);
+Stack*  StackCtor(  const char*         CREATION_FILE = NULL, 
+                    int                 CREATION_LINE = NULL, 
+                    const char*         CREATION_FUNC = NULL, 
+                    StackErrorsBitmask* err_ret       = NULL);
+
 void    StackDtor(Stack *stk, StackErrorsBitmask* err_ret = NULL);
 
-void    StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret = NULL);
 Elem_t  StackPop (Stack *stk, StackErrorsBitmask* err_ret = NULL);
+void    StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret = NULL);
+
+void StackDump( Stack*                  stk         , 
+                StackErrorsBitmask      errors      , 
+                const char*             STACK_NAME  , 
+                const char*             FILE_NAME   , 
+                int                     LINE        , 
+                const char*             FUNC
+            );
 
 void StackCheckAllErrors(StackErrorsBitmask errors);
 

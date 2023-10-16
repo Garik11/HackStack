@@ -1,5 +1,8 @@
 #include "StackHidden.h"
 
+static void StackSizeMultiplier (Stack* stk, StackErrorsBitmask* err_ret = NULL);
+static void StackSizeDivider    (Stack* stk, StackErrorsBitmask* err_ret = NULL);
+
 Stack* StackCtor(const char*    CREATION_FILE, 
                 int             CREATION_LINE, 
                 const char*     CREATION_FUNC, 
@@ -25,8 +28,8 @@ Stack* StackCtor(const char*    CREATION_FILE,
     }
 
     ON_CALIBRI(
-        stk->calibri_left  = (Calibri)stk;
-        stk->calibri_right = (Calibri)(stk->calibri_left + sizeof(stk));
+        stk->calibri_left  =    (Calibri)   stk;
+        stk->calibri_right = /* (Calibri)*/ (stk->calibri_left + sizeof(stk));
     )
 
     #ifdef USE_CALIBRI
@@ -338,7 +341,7 @@ void StackPush(Stack *stk, Elem_t element, StackErrorsBitmask* err_ret /* = NULL
         return;
     }
     
-    #warning move data sizeof(calibri) forward
+    //#warning move data sizeof(calibri) forward
     #ifdef USE_CALIBRI
         *((Elem_t*)(stk->data + stk->size * sizeof(Elem_t) + sizeof(Calibri))) = element;
     #else

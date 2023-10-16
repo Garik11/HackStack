@@ -4,8 +4,6 @@
 #include "StackStruct.h"
 #include "StackHidden.h"
 
-static Stack StacksArray[STACK_MAX_SIZE] = {};
-
 void StackNullificator      (Stack*  stk, StackErrorsBitmask* err_ret);
 void StackGetStack          (Stack** stk, StackErrorsBitmask* err_ret);
 void StackBackStack         (Stack*  stk, StackErrorsBitmask* err_ret);

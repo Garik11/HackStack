@@ -35,7 +35,10 @@ static const size_t STACK_SIZE_MULTIPLIER  = 2;
 
 StackErrorsBitmask StackVerificator (Stack *stk, StackErrorsBitmask basicerror = STACK_ALL_OK);
 
-static void StackSizeMultiplier (Stack* stk, StackErrorsBitmask* err_ret = NULL);
-static void StackSizeDivider    (Stack* stk, StackErrorsBitmask* err_ret = NULL);
+//static void StackSizeMultiplier (Stack* stk, StackErrorsBitmask* err_ret = NULL);
+//static void StackSizeDivider    (Stack* stk, StackErrorsBitmask* err_ret = NULL);
+
+//static void StackSizeDivider(Stack* stk, StackErrorsBitmask* err_ret /* = NULL */){
+
 
 #endif // !STACK_HIDDEN_H

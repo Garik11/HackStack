@@ -1,5 +1,7 @@
 #include "StackArray.h"
 
+static Stack StacksArray[STACK_MAX_SIZE] = {};
+
 void StackNullificator (Stack *stk, StackErrorsBitmask* err_ret){
 
     StackErrorsBitmask errors = StackVerificator(stk);
@@ -38,7 +40,7 @@ void StackNullificator (Stack *stk, StackErrorsBitmask* err_ret){
 bool StackCheckExistence (Stack* stk){
 
     return StacksArray >= stk && stk < (StacksArray + STACK_MAX_SIZE) &&
-        ((stk - StacksArray) % sizeof(stk) == 0);
+        ((((unsigned long)stk - (unsigned long)StacksArray) % sizeof((unsigned long)stk)) == 0);
 }
 
 bool StackCheckNullificator (Stack *stk){

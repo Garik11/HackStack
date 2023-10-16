@@ -39,7 +39,7 @@ enum StackErrors{
 };
 
 Stack*  StackCtor(  const char*         CREATION_FILE = NULL, 
-                    int                 CREATION_LINE = NULL, 
+                    int                 CREATION_LINE = 0   , 
                     const char*         CREATION_FUNC = NULL, 
                     StackErrorsBitmask* err_ret       = NULL);
 

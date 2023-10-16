@@ -27,12 +27,12 @@ int main(void){
     
     StackErrorsBitmask error = STACK_ALL_OK;
     Stack *stk = STACK_CTOR(&error);
-    for(int i = 0; i < 100; i++) 
+    for(int i = 0; i < 10000; i++) 
         StackPush(stk, i*i, &error);
-    for(int i = 0; i < 100; i++)
+    for(int i = 0; i < 10001; i++)
         printf("%d\n", StackPop(stk, &error));
     STACK_DUMP(stk, STACK_ALL_OK);
-    StackDump(stk, STACK_ALL_OK, "stk", NULL, NULL, NULL);
+    //StackDump(stk, STACK_ALL_OK, "stk", NULL, NULL, NULL);
     StackDtor(stk, &error);
 }
 

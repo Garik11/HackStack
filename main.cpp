@@ -26,14 +26,18 @@ int main(void){
     printf(MY_BEST_CAT);
     
     StackErrorsBitmask error = STACK_ALL_OK;
-    Stack *stk = STACK_CTOR(&error);
-    for(int i = 0; i < 10000; i++) 
-        StackPush(stk, i*i, &error);
-    for(int i = 0; i < 10001; i++)
-        printf("%d\n", StackPop(stk, &error));
-    STACK_DUMP(stk, STACK_ALL_OK);
-    //StackDump(stk, STACK_ALL_OK, "stk", NULL, NULL, NULL);
-    StackDtor(stk, &error);
+    Stack *stk  = STACK_CTOR(&error);
+    assert(error == STACK_ALL_OK);
+    Stack *stk2 = STACK_CTOR(&error);
+    assert(error == STACK_ALL_OK);
+    StackPush(stk, 100);
+    StackPush(stk2, 1000000);
+    printf("f1 = %d\n", StackPop(stk));
+    printf("f2 = %d\n", StackPop(stk2));
+    StackDtor(stk);
+    StackDtor(stk2);
+    printf("f1 = %d\n", StackPop(stk));
+    printf("f2 = %d\n", StackPop(stk2));
 }
 
 /*

@@ -38,9 +38,12 @@ void StackNullificator (Stack *stk, StackErrorsBitmask* err_ret){
 
 //Допилить
 bool StackCheckExistence (Stack* stk){
+    unsigned long stkaddr = (unsigned long)stk;
+    unsigned long startaddr = (unsigned long)StacksArray;
+    unsigned long endaddr = (unsigned long)(StacksArray + STACK_MAX_SIZE);
 
-    return StacksArray >= stk && stk < (StacksArray + STACK_MAX_SIZE) &&
-        ((((unsigned long)stk - (unsigned long)StacksArray) % sizeof((unsigned long)stk)) == 0);
+    return stkaddr >= startaddr && stkaddr <= endaddr &&
+        (((stkaddr - startaddr) % sizeof(Stack)) == 0);
 }
 
 bool StackCheckNullificator (Stack *stk){

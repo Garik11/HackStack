@@ -307,7 +307,7 @@ void StackDump(Stack *stk, StackErrorsBitmask errors, const char* STACK_NAME, co
     printf("\t\t{\n");
 
     for(size_t i = 0; i < number_of_elements; i++)
-        printf("\t\t *[%lu] = "specifier_Elem_t"\n", i, *((Elem_t*)(stk->data + i * sizeof(Elem_t) + sizeof(Calibri))));
+        printf("\t\t*[%3lu] = "specifier_Elem_t"\n", i, *((Elem_t*)(stk->data + i * sizeof(Elem_t) + sizeof(Calibri))));
     printf("\t\t}\n");
     printf("\t}\n");
 }

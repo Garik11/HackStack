@@ -33,11 +33,10 @@ int main(void){
     StackPush(stk, 100);
     StackPush(stk2, 1000000);
     printf("f1 = %d\n", StackPop(stk));
+    printf("f1 = %d\n", StackPop(stk));
     printf("f2 = %d\n", StackPop(stk2));
     StackDtor(stk);
     StackDtor(stk2);
-    printf("f1 = %d\n", StackPop(stk));
-    printf("f2 = %d\n", StackPop(stk2));
 }
 
 /*
